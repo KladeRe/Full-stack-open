@@ -2,7 +2,8 @@ import axios from 'axios'
 const baseURL = "http://localhost:3001/persons"
 
 const getAll = () => {
-    return axios.get(baseURL)
+    const request = axios.get(baseUrl)
+    return request.then(response => response.data)
 }
 
 const add = newObject => {
