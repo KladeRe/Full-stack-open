@@ -4,9 +4,39 @@ const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 mongoose.connect(url)
   .then(result => {    console.log('connected to MongoDB')  })  .catch((error) => {    console.log('error connecting to MongoDB:', error.message)  })
+
+
 const phoneSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minlength: 3,
+    required: true,
+    unique: true
+
+  },
+
+  number: {
+    type: String,
+    minlength: 8,
+    required: true, 
+    validate: {
+        validator: function(arr) {
+            if (String(arr).includes("-")) {
+                let regexp = /^\d+$/
+                if ((regexp.test(String(arr).substring(0,2)) == true && regexp.test(String(arr).substring(3))) || (regexp.test(String(arr).substring(0,3)) == true && regexp.test(String(arr).substring(4)))) {
+                    return true
+                } else {
+                    return false
+                }
+
+            } else {
+                return true
+            }
+        }, 
+        message: "Number isn't written correctly"
+    }
+
+  }
 })
 
 phoneSchema.set('toJSON', {
